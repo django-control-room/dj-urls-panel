@@ -35,6 +35,7 @@ Django admin URL introspection. Inspect, search, and understand your project's U
   - Ability to disable testing interface entirely
 - **Search & Filter**: Search URLs by pattern, name, or view function
 - **Namespace Support**: Filter and organize URLs by namespace
+- **AI Agent Integration (MCP)**: Exposes `list_urls`, `get_url_detail`, and `inspect_view` tools so AI agents (Cursor, Claude, etc.) can introspect your URL routing via [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server
 
 
 ### Project Structure
@@ -77,16 +78,6 @@ Browse all URLs in your Django project with detailed information about patterns,
 View detailed information about each URL and test it directly from the admin interface.
 
 ![URL Detail](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/admin_url_detail.png)
-
-### Interactive Testing - GET Request
-Test GET requests with dynamic URL parameters, headers, and authentication.
-
-![Test GET Request](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/admin_url_test_get.png)
-
-### Interactive Testing - PATCH Request
-Test PATCH/POST/PUT requests with request body editor and see responses in real-time.
-
-![Test PATCH Request](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/admin_url_test_patch.png)
 
 ### DRF Serializer Information
 Automatic detection and visualization of Django REST Framework serializers with field details.
@@ -204,6 +195,36 @@ python manage.py createsuperuser  # If you don't have an admin user
 
 3. Look for the "DJ URLS PANEL" section in the admin interface
 
+
+## MCP Tools (AI Agent Integration)
+
+Dj Urls Panel ships a set of [panel tools](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) that are automatically exposed over MCP when installed alongside [dj-control-room](https://github.com/django-control-room/dj-control-room) with its MCP endpoint enabled. This lets AI agents (Cursor, Claude, etc.) introspect your project's URL routing directly.
+
+| Tool | Description |
+|---|---|
+| `list_urls` | List every URL pattern, with its name, view, namespace, and allowed HTTP methods. Filter by `namespace`, `query` (substring match over pattern/name/view), and `http_method`. |
+| `get_url_detail` | Full detail for a URL — view, view class, namespace, HTTP methods, URL parameters, and DRF serializer info (if any). Look up by exact `name` or `pattern`, or reverse-lookup by `view` (dotted path or bare name) to find every URL routed to it. |
+| `inspect_view` | Resolve a view's `dotted_path` (e.g. `api.views.ArticleViewSet`) to its source file/line and any URL patterns currently routed to it, so an agent can jump straight to the view instead of grepping. |
+
+By default, `inspect_view` only returns metadata (no source code). Enable a source preview in its results with:
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'SHOW_SOURCE': True,  # include a source code preview in inspect_view results
+}
+```
+
+All three tools ship under the `introspect` scope, which can be locked down independently of the panel's own view permissions via `SCOPE_PERMISSIONS`:
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'SCOPE_PERMISSIONS': {
+        'introspect': {'allowed_groups': ['ai-agents']},
+    },
+}
+```
+
+See [dj-control-room's MCP endpoint](https://github.com/django-control-room/dj-control-room/blob/main/dj_control_room/mcp_views.py) for wiring up `MCP_ENABLED`/`MCP_TOKEN`/`MCP_USERNAME` and connecting Cursor/Claude/other MCP clients.
 
 
 ## License

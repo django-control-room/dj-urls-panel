@@ -24,6 +24,7 @@ Dj Urls Panel is a Django admin extension that provides a comprehensive interfac
   - Optional host whitelisting for production
   - Ability to disable testing interface entirely
 - **Admin Panel Integration**: Seamlessly integrated into Django Admin
+- **AI Agent Integration (MCP)**: Exposes `list_urls`, `get_url_detail`, and `inspect_view` tools to AI agents via dj-control-room's MCP server
 
 ## Quick Links
 

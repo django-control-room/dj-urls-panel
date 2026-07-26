@@ -53,3 +53,35 @@ DJ_URLS_PANEL_SETTINGS = {
     ],
 }
 ```
+
+## Panel Tools (MCP)
+
+Dj Urls Panel ships `dj_urls_panel/tools.py`, a `ToolRegistry` of MCP-facing tools (`list_urls`, `get_url_detail`, `inspect_view`) that [dj-control-room](https://github.com/django-control-room/dj-control-room) aggregates and exposes to AI agents over its MCP endpoint. See [Features → MCP Tools](features.md#-mcp-tools-ai-agent-integration) for the full tool reference.
+
+### `SHOW_SOURCE`
+
+**Type:** `bool`  
+**Default:** `False`  
+**Description:** When `True`, the `inspect_view` tool includes a source code preview (up to 20 lines) in its results. Leave `False` to return metadata only.
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'SHOW_SOURCE': True,
+}
+```
+
+### `SCOPE_PERMISSIONS`
+
+**Type:** `dict`  
+**Default:** `{}`  
+**Description:** Restrict individual tool scopes (or view scopes) independently of the panel's default permission checks. All three panel tools ship under the `introspect` scope.
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'SCOPE_PERMISSIONS': {
+        'introspect': {'allowed_groups': ['ai-agents']},
+    },
+}
+```
+
+See the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for the full API.
