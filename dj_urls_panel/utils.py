@@ -1,8 +1,6 @@
 from django.urls import URLPattern, URLResolver, get_resolver
 from django.conf import settings
 
-from .conf import panel_config
-
 
 def get_drf_serializer_info(view_class):
     """
@@ -288,6 +286,8 @@ class UrlListInterface:
         Sets default values if setting is not configured.
         """
         import re
+
+        from .conf import panel_config
 
         panel_settings = panel_config.get_settings()
 
@@ -587,3 +587,77 @@ class UrlListInterface:
             if url["pattern"] == pattern:
                 return url
         return None
+
+    def get_url_by_name(self, name):
+        """
+        Get a specific URL by its (possibly namespaced) name.
+
+        Args:
+            name: URL name to search for, e.g. 'admin:login'
+
+        Returns:
+            URL dictionary or None if not found
+        """
+        urls = self.get_url_list()
+        for url in urls:
+            if url["name"] == name:
+                return url
+        return None
+
+    def filter_urls(self, namespace=None, query=None, http_method=None):
+        """
+        Filter URLs by namespace, search query, and/or HTTP method.
+
+        Args:
+            namespace: Exact namespace to match; use '_root' to match URLs
+                       with no namespace. None/empty skips this filter.
+            query: Case-insensitive substring filter over pattern/name/view
+                   (delegates to search_urls). None/empty skips this filter.
+            http_method: HTTP method the view must support, e.g. 'POST'.
+                         None/empty skips this filter.
+
+        Returns:
+            Filtered list of URL dictionaries.
+        """
+        urls = self.search_urls(query) if query else self.get_url_list()
+
+        if namespace:
+            urls = [url for url in urls if (url["namespace"] or "_root") == namespace]
+
+        if http_method:
+            method = http_method.upper()
+            urls = [url for url in urls if method in url["http_methods"]]
+
+        return urls
+
+    def get_urls_by_view(self, view_ref):
+        """
+        Reverse lookup: find every URL whose view or view_class matches a
+        dotted path or bare name (e.g. 'api.views.ArticleViewSet' or
+        'ArticleViewSet'), case-insensitively.
+
+        Args:
+            view_ref: Dotted view path or bare class/function name.
+
+        Returns:
+            List of matching URL dictionaries, sorted by pattern.
+        """
+        matches = [
+            url for url in self.get_url_list() if self._matches_view_ref(url, view_ref)
+        ]
+        matches.sort(key=lambda url: url["pattern"])
+        return matches
+
+    @staticmethod
+    def _matches_view_ref(url, view_ref):
+        """Whether a URL's view/view_class matches a dotted path or bare name."""
+        view_ref_lower = view_ref.lower()
+        for field in ("view", "view_class"):
+            value = url.get(field)
+            if not value:
+                continue
+            if value == view_ref or value.lower() == view_ref_lower:
+                return True
+            if value.rsplit(".", 1)[-1].lower() == view_ref_lower:
+                return True
+        return False

@@ -23,29 +23,10 @@ def index(request):
     search_query = request.GET.get("q", "").strip()
     namespace_filter = request.GET.get("namespace", "").strip()
 
-    # Get all URLs first
-    urls = url_interface.get_url_list()
-
-    # Apply search filter
-    if search_query:
-        urls = [
-            url
-            for url in urls
-            if (
-                search_query.lower() in url["pattern"].lower()
-                or (url["name"] and search_query.lower() in url["name"].lower())
-                or search_query.lower() in url["view"].lower()
-            )
-        ]
-
-    # Apply namespace filter
-    if namespace_filter:
-        if namespace_filter == "_root":
-            # Filter for URLs with no namespace
-            urls = [url for url in urls if not url["namespace"]]
-        else:
-            # Filter for specific namespace
-            urls = [url for url in urls if url["namespace"] == namespace_filter]
+    # Apply search/namespace filters
+    urls = url_interface.filter_urls(
+        namespace=namespace_filter or None, query=search_query or None
+    )
 
     # Get statistics (always from full URL list)
     stats = url_interface.get_stats()
@@ -234,7 +215,7 @@ class ExecuteRequestView(View):
         """
         from urllib.parse import urlparse
 
-        allowed_hosts = panel_config.get_settings('ALLOWED_HOSTS')
+        allowed_hosts = panel_config.get_settings("ALLOWED_HOSTS")
 
         try:
             parsed = urlparse(url)
@@ -252,20 +233,23 @@ class ExecuteRequestView(View):
             # Default blocklist for SSRF protection
             # Block localhost and private IP ranges
             blocked_patterns = [
-                r'^localhost$',
-                r'^127\.',  # Loopback
-                r'^10\.',   # Private class A
-                r'^172\.(1[6-9]|2[0-9]|3[01])\.',  # Private class B
-                r'^192\.168\.',  # Private class C
-                r'^169\.254\.',  # Link-local (includes cloud metadata)
-                r'^::1$',  # IPv6 localhost
-                r'^fe80:',  # IPv6 link-local
-                r'^fc00:',  # IPv6 private
+                r"^localhost$",
+                r"^127\.",  # Loopback
+                r"^10\.",  # Private class A
+                r"^172\.(1[6-9]|2[0-9]|3[01])\.",  # Private class B
+                r"^192\.168\.",  # Private class C
+                r"^169\.254\.",  # Link-local (includes cloud metadata)
+                r"^::1$",  # IPv6 localhost
+                r"^fe80:",  # IPv6 link-local
+                r"^fc00:",  # IPv6 private
             ]
 
             for pattern in blocked_patterns:
                 if re.match(pattern, hostname, re.IGNORECASE):
-                    return False, f"Host '{hostname}' is blocked for security reasons (internal/private IP)"
+                    return (
+                        False,
+                        f"Host '{hostname}' is blocked for security reasons (internal/private IP)",
+                    )
 
             return True, None
 
@@ -320,7 +304,9 @@ class ExecuteRequestView(View):
         except Exception:
             pass
 
-    def _build_auth_and_cookies(self, request, url, method, headers, auth_type, auth_value):
+    def _build_auth_and_cookies(
+        self, request, url, method, headers, auth_type, auth_value
+    ):
         """
         Resolve the ``auth`` tuple and ``cookies`` dict for a proxied request,
         mutating ``headers`` in place with any Authorization/CSRF headers implied
