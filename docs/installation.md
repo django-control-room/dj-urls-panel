@@ -3,7 +3,7 @@
 ## 1. Install the Package
 
 ```bash
-pip install dj-urls-panel
+pip install dj-urls-panel dj-control-room
 ```
 
 ## 2. Add to Django Settings
@@ -18,7 +18,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dj_urls_panel',  # Add this
+    'dj_control_room_base',  # core lib must be included
+    'dj_urls_panel',  # add panel here.
+    'dj_control_room', # hub package for Django control room
     # ... your other apps
 ]
 ```
@@ -32,7 +34,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path('admin/dj-control-room-base/', include('dj_control_room_base.urls')),
     path('admin/dj-urls-panel/', include('dj_urls_panel.urls')),
+    path('admin/dj-control-room/')
     path('admin/', admin.site.urls),
 ]
 ```
@@ -45,26 +49,9 @@ python manage.py migrate
 
 ## 5. Configure Settings (Optional)
 
-For basic usage, no configuration is needed. For advanced features and security options:
+For basic usage, no configuration is needed. `DJ_URLS_PANEL_SETTINGS` in your `settings.py` lets you exclude URL patterns, swap the URLconf, and lock down (or disable) the testing interface for production.
 
-```python
-# settings.py
-DJ_URLS_PANEL_SETTINGS = {
-    # Exclude specific URL patterns
-    'EXCLUDE_URLS': [
-        r'^admin/',      # Exclude admin URLs
-        r'^__debug__/',  # Exclude debug toolbar
-    ],
-    
-    # Enable/disable URL testing interface
-    'ENABLE_TESTING': True,  # Set to False in production
-    
-    # Whitelist hosts for URL testing (SSRF protection)
-    'ALLOWED_HOSTS': None,  # or ['yourdomain.com']
-}
-```
-
-See [Configuration](configuration.md) for detailed options.
+See [Configuration](configuration.md) for the full settings reference and security recommendations.
 
 ## 6. Access the Panel
 

@@ -2,7 +2,7 @@
 
   <img src="https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/dj-urls-panel.png" alt="Dj Urls Panel Logo" width="700">
 
-  <strong>Django admin URL introspection. Inspect, search, and understand your project's URL routing—directly from the admin.</strong>
+  <strong>Django admin URL introspection. Inspect, search, and understand your project's URL routing, directly from the admin.</strong>
 
 ## Overview
 
@@ -24,13 +24,15 @@ Dj Urls Panel is a Django admin extension that provides a comprehensive interfac
   - Optional host whitelisting for production
   - Ability to disable testing interface entirely
 - **Admin Panel Integration**: Seamlessly integrated into Django Admin
+- **AI Agent Integration (MCP)**: Exposes `list_urls`, `get_url_detail`, and `inspect_view` tools to AI agents via dj-control-room's MCP server
 
 ## Quick Links
 
 - [✨ Features](features.md) - Explore all features with screenshots
 - [📦 Installation](installation.md) - Get started in minutes
 - [⚙️ Configuration](configuration.md) - Customize for your needs
-- [🔧 Development](development.md) - Contribute to the project
+- [🔒 Scopes](scopes.md) - Lock down specific views or MCP tools
+- [🔧 Development](contributing.md) - Contribute to the project
 
 ## Requirements
 

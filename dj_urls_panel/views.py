@@ -11,7 +11,7 @@ from .conf import panel_config
 from .utils import UrlListInterface
 
 
-@panel_config.permission_required("index")
+@panel_config.permission_required("url_list")
 def index(request):
     """
     Display panel dashboard with URL list.
@@ -59,7 +59,7 @@ def index(request):
     return render(request, "admin/dj_urls_panel/index.html", context)
 
 
-@panel_config.permission_required("detail")
+@panel_config.permission_required("url_detail")
 def url_detail(request, pattern):
     """
     Display detailed information about a specific URL.
@@ -108,7 +108,7 @@ def url_detail(request, pattern):
     return render(request, "admin/dj_urls_panel/detail.html", context)
 
 
-@method_decorator(panel_config.permission_required("execute"), name="dispatch")
+@method_decorator(panel_config.permission_required("url_execute"), name="dispatch")
 class ExecuteRequestView(View):
     """
     Proxy endpoint backing the URL testing interface: executes an HTTP

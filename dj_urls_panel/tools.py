@@ -16,7 +16,7 @@ registry = ToolRegistry()
 
 @registry.register(
     name="list_urls",
-    scope="introspect",
+    scope="agent_url_list",
     description=(
         "List every URL pattern Dj Urls Panel can see, with its name, "
         "view, namespace, and allowed HTTP methods."
@@ -65,7 +65,7 @@ def handle_list_urls(ctx: PanelToolContext) -> PanelToolResult:
 
 @registry.register(
     name="get_url_detail",
-    scope="introspect",
+    scope="agent_url_detail",
     description=(
         "Get full detail for URL(s) - view, view class, namespace, HTTP "
         "methods, URL parameters, and DRF serializer info (if any). Look "
@@ -133,7 +133,7 @@ def handle_get_url_detail(ctx: PanelToolContext) -> PanelToolResult:
 
 @registry.register(
     name="inspect_view",
-    scope="introspect",
+    scope="agent_inspect_view",
     description=(
         "Resolve a view's dotted path to its source file/line (and any URL "
         "patterns currently routed to it), so an agent can jump straight to "

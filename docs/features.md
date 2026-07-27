@@ -40,18 +40,6 @@ A Swagger-like interface for testing your URLs directly from the admin, without 
 
 ![URL Detail & Testing Interface](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/admin_url_detail.png)
 
-### Testing GET Requests
-
-Test GET requests with URL parameters, query strings, and custom headers.
-
-![GET Request Testing](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/admin_url_test_get.png)
-
-### Testing POST/PUT/PATCH Requests
-
-Test write operations with a full-featured request body editor.
-
-![PATCH Request Testing](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/admin_url_test_patch.png)
-
 ---
 
 ## 🔗 Django REST Framework Integration
@@ -137,6 +125,44 @@ Code examples showing how to use URLs in your Django views:
 
 ---
 
+## 🤖 MCP Tools (AI Agent Integration)
+
+Dj Urls Panel ships a `dj_urls_panel/tools.py` `ToolRegistry` of MCP-facing tools. When installed alongside [dj-control-room](https://github.com/django-control-room/dj-control-room) with its MCP endpoint enabled, these tools are automatically aggregated and exposed so AI agents (Cursor, Claude, etc.) can introspect your project's URL routing.
+
+### Available Tools
+
+| Tool | Description |
+|---|---|
+| `list_urls` | List every URL pattern, with its name, view, namespace, and allowed HTTP methods. Filter by `namespace`, `query` (substring match over pattern/name/view), and `http_method`. |
+| `get_url_detail` | Full detail for a URL: view, view class, namespace, HTTP methods, URL parameters, and DRF serializer info (if any). Look up by exact `name` or `pattern`, or reverse-lookup by `view` (dotted path or bare name) to find every URL routed to it. |
+| `inspect_view` | Resolve a view's `dotted_path` (e.g. `api.views.ArticleViewSet`) to its source file/line and any URL patterns currently routed to it, so an agent can jump straight to the view instead of grepping. |
+
+### Source Previews
+
+By default, `inspect_view` only returns metadata (no source code). Enable a source preview in its results with:
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'SHOW_SOURCE': True,  # include a source code preview in inspect_view results
+}
+```
+
+### Permissions
+
+Each tool ships under its own scope (`agent_url_list`, `agent_url_detail`, `agent_inspect_view`), distinct from the view scopes humans hit in the admin UI. This means agent access can be restricted (or opened up) independently of what staff can browse in the admin, via `SCOPE_PERMISSIONS`:
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'SCOPE_PERMISSIONS': {
+        'agent_inspect_view': {'ALLOWED_GROUPS': ['ai-agents']},
+    },
+}
+```
+
+See [Scopes](scopes.md) for the full list of view and tool scopes, the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for how panel tools are dispatched under the hood, and [dj-control-room's MCP endpoint](https://github.com/django-control-room/dj-control-room/blob/main/dj_control_room/mcp_views.py) for connecting Cursor/Claude/other MCP clients.
+
+---
+
 ## ⚙️ Configuration Options
 
 Flexible configuration to adapt to your project needs.
@@ -202,4 +228,5 @@ Seamlessly integrated into the Django Admin interface with a familiar look and f
 
 - [Installation Guide](installation.md) - Get started in minutes
 - [Configuration](configuration.md) - Customize for your needs
-- [Development](development.md) - Contribute to the project
+- [Scopes](scopes.md) - Lock down specific views or MCP tools
+- [Development](contributing.md) - Contribute to the project
