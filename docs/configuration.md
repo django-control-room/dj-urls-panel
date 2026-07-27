@@ -2,6 +2,8 @@
 
 Dj Urls Panel currently works out of the box with minimal configuration.
 
+For access control specifically (locking down individual views or MCP tools by group), see [Scopes](scopes.md).
+
 ## Basic Setup
 
 The only required configuration is adding the app to your `INSTALLED_APPS` and including the URLs in your URL configuration.
@@ -140,14 +142,14 @@ DJ_URLS_PANEL_SETTINGS = {
 
 **Type:** `dict`  
 **Default:** `{}`  
-**Description:** Restrict individual tool scopes (or view scopes) independently of the panel's default permission checks. All three panel tools ship under the `introspect` scope.
+**Description:** Restrict individual tool scopes (or view scopes) independently of the panel's default permission checks. Each of the three panel tools ships under its own scope (`agent_url_list`, `agent_url_detail`, `agent_inspect_view`), separate from the view scopes humans hit in the admin UI, so agent access can be governed independently.
 
 ```python
 DJ_URLS_PANEL_SETTINGS = {
     'SCOPE_PERMISSIONS': {
-        'introspect': {'allowed_groups': ['ai-agents']},
+        'agent_inspect_view': {'allowed_groups': ['ai-agents']},
     },
 }
 ```
 
-See the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for the full API.
+See [Scopes](scopes.md) for the full list of view and tool scopes, and the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for the underlying API.

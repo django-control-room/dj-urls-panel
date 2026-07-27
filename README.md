@@ -9,7 +9,7 @@
 
 # Dj Urls Panel
 
-Django admin URL introspection. Inspect, search, and understand your project's URL routing—directly from the admin.
+Django admin URL introspection. Inspect, search, and understand your project's URL routing, directly from the admin.
 
 ![DJ Urls Panel](https://raw.githubusercontent.com/django-control-room/dj-urls-panel/main/images/dj-urls-panel.png)
 
@@ -118,7 +118,7 @@ For the full walkthrough, settings reference (URL filtering, testing/SSRF securi
 
 Ships `list_urls`, `get_url_detail`, and `inspect_view` tools that [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server exposes to AI agents (Cursor, Claude, etc.), so they can look up URL routing, DRF serializer info, and view source locations without grepping your codebase.
 
-See [Features → MCP Tools](https://django-control-room.github.io/dj-urls-panel/features/#mcp-tools-ai-agent-integration) for the full tool reference and [Configuration](https://django-control-room.github.io/dj-urls-panel/configuration/#panel-tools-mcp) for permission/settings options.
+See [Features → MCP Tools](https://django-control-room.github.io/dj-urls-panel/features/#mcp-tools-ai-agent-integration) for the full tool reference and [Scopes](https://django-control-room.github.io/dj-urls-panel/scopes/) for how agent access is permissioned separately from the admin UI.
 
 
 ## License

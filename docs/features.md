@@ -134,7 +134,7 @@ Dj Urls Panel ships a `dj_urls_panel/tools.py` `ToolRegistry` of MCP-facing tool
 | Tool | Description |
 |---|---|
 | `list_urls` | List every URL pattern, with its name, view, namespace, and allowed HTTP methods. Filter by `namespace`, `query` (substring match over pattern/name/view), and `http_method`. |
-| `get_url_detail` | Full detail for a URL — view, view class, namespace, HTTP methods, URL parameters, and DRF serializer info (if any). Look up by exact `name` or `pattern`, or reverse-lookup by `view` (dotted path or bare name) to find every URL routed to it. |
+| `get_url_detail` | Full detail for a URL: view, view class, namespace, HTTP methods, URL parameters, and DRF serializer info (if any). Look up by exact `name` or `pattern`, or reverse-lookup by `view` (dotted path or bare name) to find every URL routed to it. |
 | `inspect_view` | Resolve a view's `dotted_path` (e.g. `api.views.ArticleViewSet`) to its source file/line and any URL patterns currently routed to it, so an agent can jump straight to the view instead of grepping. |
 
 ### Source Previews
@@ -149,17 +149,17 @@ DJ_URLS_PANEL_SETTINGS = {
 
 ### Permissions
 
-All three tools ship under the `introspect` scope, which can be restricted independently of the panel's own view permissions via `SCOPE_PERMISSIONS`:
+Each tool ships under its own scope (`agent_url_list`, `agent_url_detail`, `agent_inspect_view`), distinct from the view scopes humans hit in the admin UI. This means agent access can be restricted (or opened up) independently of what staff can browse in the admin, via `SCOPE_PERMISSIONS`:
 
 ```python
 DJ_URLS_PANEL_SETTINGS = {
     'SCOPE_PERMISSIONS': {
-        'introspect': {'allowed_groups': ['ai-agents']},
+        'agent_inspect_view': {'allowed_groups': ['ai-agents']},
     },
 }
 ```
 
-See the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for how panel tools are dispatched under the hood, and [dj-control-room's MCP endpoint](https://github.com/django-control-room/dj-control-room/blob/main/dj_control_room/mcp_views.py) for connecting Cursor/Claude/other MCP clients.
+See [Scopes](scopes.md) for the full list of view and tool scopes, the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for how panel tools are dispatched under the hood, and [dj-control-room's MCP endpoint](https://github.com/django-control-room/dj-control-room/blob/main/dj_control_room/mcp_views.py) for connecting Cursor/Claude/other MCP clients.
 
 ---
 
@@ -228,4 +228,5 @@ Seamlessly integrated into the Django Admin interface with a familiar look and f
 
 - [Installation Guide](installation.md) - Get started in minutes
 - [Configuration](configuration.md) - Customize for your needs
+- [Scopes](scopes.md) - Lock down specific views or MCP tools
 - [Development](contributing.md) - Contribute to the project
