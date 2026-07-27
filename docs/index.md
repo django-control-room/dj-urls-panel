@@ -31,7 +31,7 @@ Dj Urls Panel is a Django admin extension that provides a comprehensive interfac
 - [✨ Features](features.md) - Explore all features with screenshots
 - [📦 Installation](installation.md) - Get started in minutes
 - [⚙️ Configuration](configuration.md) - Customize for your needs
-- [🔧 Development](development.md) - Contribute to the project
+- [🔧 Development](contributing.md) - Contribute to the project
 
 ## Requirements
 

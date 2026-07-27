@@ -1,3 +1,4 @@
+[![Django Control Room Panel](https://img.shields.io/badge/Django%20Control%20Room-Panel-0c4b33?logo=django)](https://github.com/django-control-room/dj-control-room)
 [![Tests](https://github.com/django-control-room/dj-urls-panel/actions/workflows/test.yml/badge.svg)](https://github.com/django-control-room/dj-urls-panel/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/django-control-room/dj-urls-panel/branch/main/graph/badge.svg)](https://codecov.io/gh/django-control-room/dj-urls-panel)
 [![PyPI version](https://badge.fury.io/py/dj-urls-panel.svg)](https://badge.fury.io/py/dj-urls-panel)
@@ -38,25 +39,10 @@ Django admin URL introspection. Inspect, search, and understand your project's U
 - **AI Agent Integration (MCP)**: Exposes `list_urls`, `get_url_detail`, and `inspect_view` tools so AI agents (Cursor, Claude, etc.) can introspect your URL routing via [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server
 
 
-### Project Structure
-
-```
-dj-urls-panel/
-├── dj_urls_panel/         # Main package
-│   ├── templates/           # Django templates
-│   ├── views.py             # Django views
-│   └── urls.py              # URL patterns
-├── example_project/         # Example Django project
-├── tests/                   # Test suite
-├── images/                  # Screenshots for README
-└── requirements.txt         # Development dependencies
-```
-
 ## Requirements
 
 - Python 3.9+
 - Django 4.2+
-
 
 
 ## Screenshots
@@ -94,137 +80,45 @@ View URL metadata and get code examples for using URLs in your Django views.
 
 ## Installation
 
-### 1. Install the Package
-
 ```bash
-pip install dj-urls-panel
+pip install dj-urls-panel dj-control-room
 ```
 
-### 2. Add to Django Settings
-
-Add `dj_urls_panel` to your `INSTALLED_APPS`:
+Add it to `INSTALLED_APPS`, include its URLs, and migrate:
 
 ```python
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'dj_urls_panel',  # Add this line
-    # ... your other apps
+    # ...
+    'dj_control_room_base',
+    'dj_urls_panel',
+    'dj_control_room',
+    # ...
 ]
 ```
 
-### 3. Configure Settings (Optional)
-
-Add custom configuration to your Django settings:
-
 ```python
-# Optional: Configure dj_urls_panel
-DJ_URLS_PANEL_SETTINGS = {
-    # Exclude specific URL patterns from the panel
-    'EXCLUDE_URLS': [
-        r'^admin/',      # Exclude admin URLs
-        r'^__debug__/',  # Exclude debug toolbar
-    ],
-
-    # Use a custom URLconf instead of ROOT_URLCONF
-    'URL_CONFIG': None,  # e.g., 'myproject.api_urls'
-
-    # Enable/disable URL testing interface (recommended: False in production)
-    'ENABLE_TESTING': True,
-
-    # Whitelist hosts for URL testing (SSRF protection)
-    # None = default blocklist only (blocks localhost, private IPs)
-    # List = only allow specified hosts
-    'ALLOWED_HOSTS': None,  # e.g., ['example.com', 'api.example.com']
-
-    # CSS: load built-in styles and/or inject your own
-    'LOAD_DEFAULT_CSS': True,
-    # Static paths are relative to app's static/ dir (e.g. 'myapp/css/overrides.css'
-    # for a file at myapp/static/myapp/css/overrides.css). Full URLs also accepted.
-    'EXTRA_CSS': [],
-}
-```
-
-**Security Recommendations:**
-
-For production environments, we recommend:
-```python
-DJ_URLS_PANEL_SETTINGS = {
-    'ENABLE_TESTING': False,  # Disable testing interface
-    # OR if you need testing in production:
-    'ALLOWED_HOSTS': ['yourdomain.com'],  # Whitelist only your domains
-}
-```
-
-
-
-
-### 4. Include URLs
-
-Add the Panel URLs to your main `urls.py`:
-
-```python
-from django.contrib import admin
-from django.urls import path, include
-
 urlpatterns = [
-    path('admin/dj-urls-panel/', include('dj_urls_panel.urls')),  # Add this line
+    path('admin/dj-control-room-base/', include('dj_control_room.urls')),
+    path('admin/dj-urls-panel/', include('dj_urls_panel.urls')),
+    path('admin/dj-control-room/', include('dj_control_room.urls'),)
     path('admin/', admin.site.urls),
 ]
 ```
 
-### 5. Run Migrations and Create Superuser
-
 ```bash
 python manage.py migrate
-python manage.py createsuperuser  # If you don't have an admin user
 ```
 
-### 6. Access the Panel
+Then visit `/admin/` and look for the "DJ URLS PANEL" section.
 
-1. Start your Django development server:
-   ```bash
-   python manage.py runserver
-   ```
-
-2. Navigate to the Django admin at `http://127.0.0.1:8000/admin/`
-
-3. Look for the "DJ URLS PANEL" section in the admin interface
+For the full walkthrough, settings reference (URL filtering, testing/SSRF security, CSS), and production recommendations, see the [Installation](https://django-control-room.github.io/dj-urls-panel/installation/) and [Configuration](https://django-control-room.github.io/dj-urls-panel/configuration/) docs.
 
 
 ## MCP Tools (AI Agent Integration)
 
-Dj Urls Panel ships a set of [panel tools](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) that are automatically exposed over MCP when installed alongside [dj-control-room](https://github.com/django-control-room/dj-control-room) with its MCP endpoint enabled. This lets AI agents (Cursor, Claude, etc.) introspect your project's URL routing directly.
+Ships `list_urls`, `get_url_detail`, and `inspect_view` tools that [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server exposes to AI agents (Cursor, Claude, etc.), so they can look up URL routing, DRF serializer info, and view source locations without grepping your codebase.
 
-| Tool | Description |
-|---|---|
-| `list_urls` | List every URL pattern, with its name, view, namespace, and allowed HTTP methods. Filter by `namespace`, `query` (substring match over pattern/name/view), and `http_method`. |
-| `get_url_detail` | Full detail for a URL — view, view class, namespace, HTTP methods, URL parameters, and DRF serializer info (if any). Look up by exact `name` or `pattern`, or reverse-lookup by `view` (dotted path or bare name) to find every URL routed to it. |
-| `inspect_view` | Resolve a view's `dotted_path` (e.g. `api.views.ArticleViewSet`) to its source file/line and any URL patterns currently routed to it, so an agent can jump straight to the view instead of grepping. |
-
-By default, `inspect_view` only returns metadata (no source code). Enable a source preview in its results with:
-
-```python
-DJ_URLS_PANEL_SETTINGS = {
-    'SHOW_SOURCE': True,  # include a source code preview in inspect_view results
-}
-```
-
-All three tools ship under the `introspect` scope, which can be locked down independently of the panel's own view permissions via `SCOPE_PERMISSIONS`:
-
-```python
-DJ_URLS_PANEL_SETTINGS = {
-    'SCOPE_PERMISSIONS': {
-        'introspect': {'allowed_groups': ['ai-agents']},
-    },
-}
-```
-
-See [dj-control-room's MCP endpoint](https://github.com/django-control-room/dj-control-room/blob/main/dj_control_room/mcp_views.py) for wiring up `MCP_ENABLED`/`MCP_TOKEN`/`MCP_USERNAME` and connecting Cursor/Claude/other MCP clients.
+See [Features → MCP Tools](https://django-control-room.github.io/dj-urls-panel/features/#mcp-tools-ai-agent-integration) for the full tool reference and [Configuration](https://django-control-room.github.io/dj-urls-panel/configuration/#panel-tools-mcp) for permission/settings options.
 
 
 ## License
@@ -235,78 +129,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Development Setup
 
-If you want to contribute to this project or set it up for local development:
-
-### Prerequisites
-
-- Python 3.9 or higher
-- Redis server running locally
-- Git
-- Autoconf
-- Docker
-
-It is reccommended that you use docker since it will automate much of dev env setup
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/django-control-room/dj-urls-panel.git
-cd dj-urls-panel
-```
-
-### 2a. Set up dev environment using virtualenv
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-pip install -e . # install dj-urls-panel package locally
-pip intall -r requirements.txt  # install all dev requirements
-
-# Alternatively
-make install # this will also do the above in one single command
-```
-
-### 2b. Set up dev environment using docker
-
-```bash
-make docker_up  # bring up all services (redis, memached) and dev environment container
-make docker_shell  # open up a shell in the docker conatiner
-```
-
-### 3. Set Up Example Project
-
-The repository includes an example Django project for development and testing
-
-```bash
-cd example_project
-python manage.py migrate
-python manage.py createsuperuser
-```
-
-### 4. Populate Test Data (Optional)
-
-Add any custom management commands for populating test data if needed.
-
-### 6. Run the Development Server
-
-```bash
-python manage.py runserver
-```
-
-Visit `http://127.0.0.1:8000/admin/` to access the Django admin with Dj Urls Panel.
-
-### 7. Running Tests
-
-The project includes a comprehensive test suite. You can run them by using make or
-by invoking pytest directly:
-
-```bash
-# build and install all dev dependencies and run all tests inside of docker container
-make test_docker
-
-# Test without the docker on your host machine.
-# note that testing always requires a redis and memcached service to be up.
-# these are mostly easily brought up using docker
-make test_local
-```
+Want to contribute or set up the project for local development? See [docs/contributing.md](docs/contributing.md) for prerequisites, Docker/virtualenv setup, running the example project, and the test suite.

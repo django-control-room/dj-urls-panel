@@ -228,4 +228,4 @@ Seamlessly integrated into the Django Admin interface with a familiar look and f
 
 - [Installation Guide](installation.md) - Get started in minutes
 - [Configuration](configuration.md) - Customize for your needs
-- [Development](development.md) - Contribute to the project
+- [Development](contributing.md) - Contribute to the project

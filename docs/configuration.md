@@ -18,13 +18,79 @@ urlpatterns = [
 ]
 ```
 
+## URL Filtering & Testing Settings
+
+### `EXCLUDE_URLS`
+
+**Type:** `list[str]`  
+**Default:** `[]`  
+**Description:** Regex patterns for URL paths to hide from the panel entirely.
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'EXCLUDE_URLS': [
+        r'^admin/',          # Exclude admin URLs
+        r'^__debug__/',      # Exclude debug toolbar
+        r'^api/internal/',   # Exclude internal APIs
+    ],
+}
+```
+
+### `URL_CONFIG`
+
+**Type:** `str | None`  
+**Default:** `None`  
+**Description:** Use a custom URLconf module instead of `ROOT_URLCONF`. Useful for showing only a subset of URLs (e.g. just an API surface).
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'URL_CONFIG': 'myproject.api_urls',
+}
+```
+
+### `ENABLE_TESTING`
+
+**Type:** `bool`  
+**Default:** `True`  
+**Description:** Enables the Swagger-like URL testing interface (execute requests directly from the admin). Disable for a read-only, introspection-only panel.
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'ENABLE_TESTING': False,
+}
+```
+
+When disabled, the testing interface is hidden and the execute endpoint returns `403`.
+
+### `ALLOWED_HOSTS`
+
+**Type:** `list[str] | None`  
+**Default:** `None`  
+**Description:** SSRF protection for the testing interface. `None` relies on the default blocklist (localhost, private/link-local IP ranges). Set a list to allow **only** those hosts.
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'ALLOWED_HOSTS': ['example.com', 'api.example.com'],
+}
+```
+
+### Production Recommendations
+
+```python
+DJ_URLS_PANEL_SETTINGS = {
+    'ENABLE_TESTING': False,  # Disable testing interface entirely
+    # OR, if you need testing in production:
+    'ALLOWED_HOSTS': ['yourdomain.com'],  # Whitelist only your domains
+}
+```
+
 ## Security
 
 Dj Urls Panel uses Django's built-in admin authentication:
 
 - Only staff users (`is_staff=True`) can access the panel
 - All views require authentication via `@staff_member_required`
-- No additional security configuration needed
+- No additional security configuration needed beyond the settings above
 
 ## CSS Customization
 
@@ -56,7 +122,7 @@ DJ_URLS_PANEL_SETTINGS = {
 
 ## Panel Tools (MCP)
 
-Dj Urls Panel ships `dj_urls_panel/tools.py`, a `ToolRegistry` of MCP-facing tools (`list_urls`, `get_url_detail`, `inspect_view`) that [dj-control-room](https://github.com/django-control-room/dj-control-room) aggregates and exposes to AI agents over its MCP endpoint. See [Features → MCP Tools](features.md#-mcp-tools-ai-agent-integration) for the full tool reference.
+Dj Urls Panel ships `dj_urls_panel/tools.py`, a `ToolRegistry` of MCP-facing tools (`list_urls`, `get_url_detail`, `inspect_view`) that [dj-control-room](https://github.com/django-control-room/dj-control-room) aggregates and exposes to AI agents over its MCP endpoint. See [Features → MCP Tools](features.md#mcp-tools-ai-agent-integration) for the full tool reference.
 
 ### `SHOW_SOURCE`
 
