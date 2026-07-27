@@ -28,13 +28,13 @@ DJ_URLS_PANEL_SETTINGS = {
 
     'SCOPE_PERMISSIONS': {
         # Only a dedicated group may fire live test requests from the admin
-        'url_execute': {'allowed_groups': ['platform-admins']},
+        'url_execute': {'ALLOWED_GROUPS': ['platform-admins']},
 
         # AI agents may list/inspect URLs, but may not see source code
         # previews or call get_url_detail, even though staff can browse
         # the equivalent admin pages freely.
-        'agent_inspect_view': {'allowed_groups': ['ai-agents-readonly']},
-        'agent_url_detail': {'allowed_groups': []},
+        'agent_inspect_view': {'ALLOWED_GROUPS': ['ai-agents-readonly']},
+        'agent_url_detail': {'ALLOWED_GROUPS': []},
     },
 }
 ```

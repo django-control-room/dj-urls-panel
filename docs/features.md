@@ -154,7 +154,7 @@ Each tool ships under its own scope (`agent_url_list`, `agent_url_detail`, `agen
 ```python
 DJ_URLS_PANEL_SETTINGS = {
     'SCOPE_PERMISSIONS': {
-        'agent_inspect_view': {'allowed_groups': ['ai-agents']},
+        'agent_inspect_view': {'ALLOWED_GROUPS': ['ai-agents']},
     },
 }
 ```
