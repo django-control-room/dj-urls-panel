@@ -229,4 +229,4 @@ Seamlessly integrated into the Django Admin interface with a familiar look and f
 - [Installation Guide](installation.md) - Get started in minutes
 - [Configuration](configuration.md) - Customize for your needs
 - [Scopes](scopes.md) - Lock down specific views or MCP tools
-- [Development](contributing.md) - Contribute to the project
+- [Contributing](contributing.md) - Contribute to the project
