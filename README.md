@@ -36,7 +36,7 @@ Django admin URL introspection. Inspect, search, and understand your project's U
   - Ability to disable testing interface entirely
 - **Search & Filter**: Search URLs by pattern, name, or view function
 - **Namespace Support**: Filter and organize URLs by namespace
-- **AI Agent Integration (MCP)**: Exposes `list_urls`, `get_url_detail`, and `inspect_view` tools so AI agents (Cursor, Claude, etc.) can introspect your URL routing via [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server
+- **AI Agent Integration (MCP)**: Exposes `list_urls`, `get_url_detail`, and `inspect_view` tools so AI agents (Cursor, Claude, etc.) can introspect your URL routing via [dj-control-room](https://django-control-room.github.io/dj-control-room/)'s MCP server
 
 
 ## Requirements
@@ -116,17 +116,17 @@ For the full walkthrough, settings reference (URL filtering, testing/SSRF securi
 
 ## MCP Tools (AI Agent Integration)
 
-Ships `list_urls`, `get_url_detail`, and `inspect_view` tools that [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server exposes to AI agents (Cursor, Claude, etc.), so they can look up URL routing, DRF serializer info, and view source locations without grepping your codebase.
+Ships `list_urls`, `get_url_detail`, and `inspect_view` tools that [dj-control-room](https://django-control-room.github.io/dj-control-room/)'s MCP server exposes to AI agents (Cursor, Claude, etc.), so they can look up URL routing, DRF serializer info, and view source locations without grepping your codebase.
 
 See [Features → MCP Tools](https://django-control-room.github.io/dj-urls-panel/features/#mcp-tools-ai-agent-integration) for the full tool reference and [Scopes](https://django-control-room.github.io/dj-urls-panel/scopes/) for how agent access is permissioned separately from the admin UI.
 
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/django-control-room/dj-urls-panel/blob/main/LICENSE) file for details.
 
 ---
 
-## Development Setup
+## Contributing
 
-Want to contribute or set up the project for local development? See [docs/contributing.md](docs/contributing.md) for prerequisites, Docker/virtualenv setup, running the example project, and the test suite.
+Want to contribute or set up the project for local development? See [Contributing](https://django-control-room.github.io/dj-urls-panel/contributing/) for prerequisites, Docker/virtualenv setup, running the example project, and the test suite.
