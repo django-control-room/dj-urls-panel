@@ -28,11 +28,11 @@ Dj Urls Panel is a Django admin extension that provides a comprehensive interfac
 
 ## Quick Links
 
-- [Features](https://django-control-room.github.io/dj-urls-panel/features/) - Explore all features with screenshots
-- [Installation](https://django-control-room.github.io/dj-urls-panel/installation/) - Get started in minutes
-- [Configuration](https://django-control-room.github.io/dj-urls-panel/configuration/) - Customize for your needs
-- [Scopes](https://django-control-room.github.io/dj-urls-panel/scopes/) - Lock down specific views or MCP tools
-- [Contributing](https://django-control-room.github.io/dj-urls-panel/contributing/) - Contribute to the project
+- [Features](features.md) - Explore all features with screenshots
+- [Installation](installation.md) - Get started in minutes
+- [Configuration](configuration.md) - Customize for your needs
+- [Scopes](scopes.md) - Lock down specific views or MCP tools
+- [Contributing](contributing.md) - Contribute to the project
 
 ## Requirements
 
